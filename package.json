@@ -1,0 +1,19 @@
+{
+  "name": "atom-vim-like-tab",
+  "main": "./lib/atom-vim-like-tab",
+  "version": "0.0.0",
+  "description": "Emulate Vim like tab",
+  "keywords": [
+    "Vim", "pane"
+  ],
+  "activationCommands": {
+    "atom-workspace": "atom-vim-like-tab:toggle"
+  },
+  "repository": "https://github.com/kesin11/atom-vim-like-tab",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
