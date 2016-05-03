@@ -7,10 +7,6 @@
     "Vim",
     "pane"
   ],
-  "activationCommands": {
-    "atom-workspace": "atom-vim-like-tab:toggle"
-  },
-
   "repository": "https://github.com/kesin11/atom-vim-like-tab",
   "license": "MIT",
   "engines": {
