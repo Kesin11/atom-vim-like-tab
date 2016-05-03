@@ -4,16 +4,27 @@
   "version": "0.0.0",
   "description": "Emulate Vim like tab",
   "keywords": [
-    "Vim", "pane"
+    "Vim",
+    "pane"
   ],
   "activationCommands": {
     "atom-workspace": "atom-vim-like-tab:toggle"
   },
+
   "repository": "https://github.com/kesin11/atom-vim-like-tab",
   "license": "MIT",
   "engines": {
-    "atom": ">=1.0.0 <2.0.0"
+    "atom": ">=1.5.0 <2.0.0"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint lib"
+  },
+  "devDependencies": {
+    "eslint": "^2.9.0",
+    "eslint-config-airbnb-base": "^2.0.0",
+    "eslint-plugin-import": "^1.6.1"
   },
   "dependencies": {
+    "underscore-plus": "^1.6.6"
   }
 }

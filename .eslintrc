@@ -1,0 +1,10 @@
+{
+    "extends": "airbnb-base",
+    "rules": {
+      semi: ["error", "never"],
+      import/no-unresolved: [2, { ignore: ['atom'] }]
+    },
+    "globals":{
+        "atom": false
+    }
+}
