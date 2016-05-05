@@ -1,10 +1,20 @@
 {
-    "extends": "airbnb-base",
+    "plugins": [
+        "jasmine"
+    ],
+    "env": {
+      "jasmine": true
+    },
+    "extends": [
+      "airbnb-base",
+      "plugin:jasmine/recommended",
+    ],
     "rules": {
       semi: ["error", "never"],
       import/no-unresolved: [2, { ignore: ['atom'] }]
     },
     "globals":{
-        "atom": false
+        "atom": false,
+        "waitsForPromise": false
     }
 }

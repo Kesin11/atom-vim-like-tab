@@ -1,73 +1,137 @@
-'use babel';
+'use babel'
 
-import AtomVimLikeTab from '../lib/atom-vim-like-tab';
+import TabController from '../lib/tab_controller'
+import _ from 'underscore-plus'
 
 // Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 //
 // To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 // or `fdescribe`). Remove the `f` to unfocus the block.
 
+// TODO:
+// done 起動したときにtabControllersができている
+// done deactivateしたときにちゃんと色々開放されている
+// done new tabしたときに新しいtabControllerができて別のpaneを持っている
+// done paneを追加したとき、activeなtabContollerに追加されていて、deiactivateには追加されないこと
+// done nextしたときにした時に今のtabがhideでdeactivate, 前のtabがshowでactivateなこと
+// done paneが完全になくなったとき、tabControllerが消えていること
+
 describe('AtomVimLikeTab', () => {
-  let workspaceElement, activationPromise;
+  const getMain = () => atom.packages.getLoadedPackage('atom-vim-like-tab').mainModule
 
-  beforeEach(() => {
-    workspaceElement = atom.views.getView(atom.workspace);
-    activationPromise = atom.packages.activatePackage('atom-vim-like-tab');
-  });
+  describe('activation', () => {
+    beforeEach(() => {
+      waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
+    })
 
-  describe('when the atom-vim-like-tab:toggle event is triggered', () => {
-    it('hides and shows the modal panel', () => {
-      // Before the activation event the view is not on the DOM, and no panel
-      // has been created
-      expect(workspaceElement.querySelector('.atom-vim-like-tab')).not.toExist();
+    describe('when activated', () => {
+      it('has one tabContoller', () => {
+        expect(getMain().tabControllers).toHaveLength(1)
+        expect(getMain().tabControllers[0] instanceof TabController).toBe(true)
+      })
+    })
+    describe('when deactivated', () => {
+      beforeEach(() => {
+        atom.packages.deactivatePackage('atom-vim-like-tab')
+      })
+      it('subscriptions should be disposed', () => {
+        expect(getMain().subscriptions.disposed).toBe(true)
+      })
+      it('tabControllers should be empty', () => {
+        expect(getMain().tabControllers.length).toEqual(0)
+      })
+    })
+  })
 
-      // This is an activation event, triggering it will cause the package to be
-      // activated.
-      atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
+  describe('dispatch command', () => {
+    let workSpaceElement
+    beforeEach(() => {
+      workSpaceElement = atom.views.getView(atom.workspace)
+      waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
+    })
+    afterEach(() => {
+      atom.packages.deactivatePackage('atom-vim-like-tab')
+    })
 
-      waitsForPromise(() => {
-        return activationPromise;
-      });
+    describe('new-tab', () => {
+      it('tabControllers should be have new controller', () => {
+        const beforeControllersNum = getMain().tabControllers.length
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
 
-      runs(() => {
-        expect(workspaceElement.querySelector('.atom-vim-like-tab')).toExist();
+        const afterControlelrs = getMain().tabControllers
+        expect(afterControlelrs.length).toBeGreaterThan(beforeControllersNum)
+      })
+      it('old pane should be hide', () => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
 
-        let atomVimLikeTabElement = workspaceElement.querySelector('.atom-vim-like-tab');
-        expect(atomVimLikeTabElement).toExist();
+        const oldControllerPanes = _.first(getMain().tabControllers).panes
+        const oldControllerPaneViews =
+          oldControllerPanes.map((pane) => atom.views.getView(pane))
+        expect(_.all(oldControllerPaneViews, (view) => view.style.display === 'none')).toBe(true)
+      })
+      it('new tabControllers should be have another pane', () => {
+        const beforePanes = _.first(getMain().tabControllers).panes
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
 
-        let atomVimLikeTabPanel = atom.workspace.panelForItem(atomVimLikeTabElement);
-        expect(atomVimLikeTabPanel.isVisible()).toBe(true);
-        atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
-        expect(atomVimLikeTabPanel.isVisible()).toBe(false);
-      });
-    });
+        const newController = _.last(getMain().tabControllers)
+        const newPane = _.first(newController.panes)
+        expect(beforePanes).not.toContain(newPane)
+      })
+      it('new pane should be managed new tabContoller after new-tab command', () => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+        atom.workspace.getActivePane().splitRight()
+        const newPane = atom.workspace.getActivePane()
 
-    it('hides and shows the view', () => {
-      // This test shows you an integration test testing at the view level.
+        const oldControllerPanes = _.first(getMain().tabControllers).panes
+        const newControllerPanes = _.last(getMain().tabControllers).panes
+        expect(oldControllerPanes).not.toContain(newPane)
+        expect(newControllerPanes).toContain(newPane)
+      })
+    })
 
-      // Attaching the workspaceElement to the DOM is required to allow the
-      // `toBeVisible()` matchers to work. Anything testing visibility or focus
-      // requires that the workspaceElement is on the DOM. Tests that attach the
-      // workspaceElement to the DOM are generally slower than those off DOM.
-      jasmine.attachToDOM(workspaceElement);
+    describe('next', () => {
+      beforeEach(() => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+      })
+      it('next pane should be show', () => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:next')
+        const showIndex = getMain().showIndex
 
-      expect(workspaceElement.querySelector('.atom-vim-like-tab')).not.toExist();
+        const nextControllerPanes = getMain().tabControllers[showIndex].panes
+        const nextControllerPaneViews =
+          nextControllerPanes.map((pane) => atom.views.getView(pane))
+        expect(_.all(nextControllerPaneViews, (view) => view.style.display === '')).toBe(true)
+      })
+      it('previous pane should be hide', () => {
+        const beforeShowIndex = getMain().showIndex
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:next')
 
-      // This is an activation event, triggering it causes the package to be
-      // activated.
-      atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
+        const previousControllerPanes = getMain().tabControllers[beforeShowIndex].panes
+        const previousControllerPaneViews =
+          previousControllerPanes.map((pane) => atom.views.getView(pane))
+        expect(
+          _.all(previousControllerPaneViews,
+            (view) => view.style.display === 'none')
+          ).toBe(true)
+      })
+    })
+    describe('triggered by outside action', () => {
+      beforeEach(() => {
+        workSpaceElement = atom.views.getView(atom.workspace)
+        waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
+      })
+      afterEach(() => {
+        atom.packages.deactivatePackage('atom-vim-like-tab')
+      })
+      describe('when all panes are closed', () => {
+        it('unnecessary tabController should be removed', () => {
+          atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+          const newController = _.last(getMain().tabControllers)
+          newController.panes.forEach((pane) => pane.close())
 
-      waitsForPromise(() => {
-        return activationPromise;
-      });
-
-      runs(() => {
-        // Now we can test for view visibility
-        let atomVimLikeTabElement = workspaceElement.querySelector('.atom-vim-like-tab');
-        expect(atomVimLikeTabElement).toBeVisible();
-        atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
-        expect(atomVimLikeTabElement).not.toBeVisible();
-      });
-    });
-  });
-});
+          expect(getMain().tabControllers).not.toContain(newController)
+        })
+      })
+    })
+  })
+})
