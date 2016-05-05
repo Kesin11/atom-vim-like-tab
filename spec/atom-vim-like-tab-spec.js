@@ -13,7 +13,7 @@ import _ from 'underscore-plus'
 // done deactivateしたときにちゃんと色々開放されている
 // done new tabしたときに新しいtabControllerができて別のpaneを持っている
 // done paneを追加したとき、activeなtabContollerに追加されていて、deiactivateには追加されないこと
-// nextしたときにした時に今のtabがhideでdiactivate, 前のtabがshowでactivateなこと
+// done nextしたときにした時に今のtabがhideでdeactivate, 前のtabがshowでactivateなこと
 // paneが完全になくなったとき、tabControllerが消えていること
 
 describe('AtomVimLikeTab', () => {
@@ -61,6 +61,14 @@ describe('AtomVimLikeTab', () => {
         const afterControlelrs = getMain().tabControllers
         expect(afterControlelrs.length).toBeGreaterThan(beforeControllersNum)
       })
+      it('old pane should be hide', () => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+
+        const oldControllerPanes = _.first(getMain().tabControllers).panes
+        const oldControllerPaneViews =
+          oldControllerPanes.map((pane) => atom.views.getView(pane))
+        expect(_.all(oldControllerPaneViews, (view) => view.style.display === 'none')).toBe(true)
+      })
       it('new tabControllers should be have another pane', () => {
         const beforePanes = _.first(getMain().tabControllers).panes
         atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
@@ -78,6 +86,33 @@ describe('AtomVimLikeTab', () => {
         const newControllerPanes = _.last(getMain().tabControllers).panes
         expect(oldControllerPanes).not.toContain(newPane)
         expect(newControllerPanes).toContain(newPane)
+      })
+    })
+
+    describe('next', () => {
+      beforeEach(() => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+      })
+      it('next pane should be show', () => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:next')
+        const showIndex = getMain().showIndex
+
+        const nextControllerPanes = getMain().tabControllers[showIndex].panes
+        const nextControllerPaneViews =
+          nextControllerPanes.map((pane) => atom.views.getView(pane))
+        expect(_.all(nextControllerPaneViews, (view) => view.style.display === '')).toBe(true)
+      })
+      it('previous pane should be hide', () => {
+        const beforeShowIndex = getMain().showIndex
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:next')
+
+        const previousControllerPanes = getMain().tabControllers[beforeShowIndex].panes
+        const previousControllerPaneViews =
+          previousControllerPanes.map((pane) => atom.views.getView(pane))
+        expect(
+          _.all(previousControllerPaneViews,
+            (view) => view.style.display === 'none')
+          ).toBe(true)
       })
     })
   })
