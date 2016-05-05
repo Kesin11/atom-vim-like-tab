@@ -48,8 +48,7 @@ describe('AtomVimLikeTab', () => {
         const beforeControllersNum = getTabControllers().length
         dispatchCommand('atom-vim-like-tab:new-tab')
 
-        const afterControlelrs = getTabControllers()
-        expect(afterControlelrs.length).toBeGreaterThan(beforeControllersNum)
+        expect(getTabControllers().length).toBeGreaterThan(beforeControllersNum)
       })
       it('old pane should be hide', () => {
         dispatchCommand('atom-vim-like-tab:new-tab')
@@ -63,8 +62,7 @@ describe('AtomVimLikeTab', () => {
         const beforePanes = getFirstTabController().panes
         dispatchCommand('atom-vim-like-tab:new-tab')
 
-        const newController = getLastTabController()
-        const newPane = _.first(newController.panes)
+        const newPane = _.first(getLastTabController().panes)
         expect(beforePanes).not.toContain(newPane)
       })
       it('new pane should be managed new tabContoller after new-tab command', () => {
@@ -114,6 +112,7 @@ describe('AtomVimLikeTab', () => {
       })
       describe('when all panes are closed', () => {
         it('unnecessary tabController should be removed', () => {
+          // create new tab and then close all pane
           dispatchCommand('atom-vim-like-tab:new-tab')
           const newController = getLastTabController()
           newController.panes.forEach((pane) => pane.close())
