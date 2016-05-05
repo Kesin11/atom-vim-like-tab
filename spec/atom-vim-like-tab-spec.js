@@ -3,19 +3,6 @@
 import TabController from '../lib/tab_controller'
 import _ from 'underscore-plus'
 
-// Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
-//
-// To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
-// or `fdescribe`). Remove the `f` to unfocus the block.
-
-// TODO:
-// done 起動したときにtabControllersができている
-// done deactivateしたときにちゃんと色々開放されている
-// done new tabしたときに新しいtabControllerができて別のpaneを持っている
-// done paneを追加したとき、activeなtabContollerに追加されていて、deiactivateには追加されないこと
-// done nextしたときにした時に今のtabがhideでdeactivate, 前のtabがshowでactivateなこと
-// done paneが完全になくなったとき、tabControllerが消えていること
-
 describe('AtomVimLikeTab', () => {
   const getMain = () => atom.packages.getLoadedPackage('atom-vim-like-tab').mainModule
 
