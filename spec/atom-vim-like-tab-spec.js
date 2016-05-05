@@ -1,73 +1,48 @@
-'use babel';
+'use babel'
 
-import AtomVimLikeTab from '../lib/atom-vim-like-tab';
+import AtomVimLikeTab from '../lib/atom-vim-like-tab'
+import TabController from '../lib/tab_controller'
 
 // Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 //
 // To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 // or `fdescribe`). Remove the `f` to unfocus the block.
 
+// TODO:
+// done 起動したときにtabControllersができている
+// done deactivateしたときにちゃんと色々開放されている
+// new tabしたときに新しいtabControllerができて別のpaneを持っている
+// paneを追加したとき、activeなtabContollerに追加されていて、diactivateには追加されないこと
+// nextしたときにした時に今のtabがhideでdiactivate, 前のtabがshowでactivateなこと
+// paneが完全になくなったとき、tabControllerが消えていること
+
 describe('AtomVimLikeTab', () => {
-  let workspaceElement, activationPromise;
+  const getMain = () => atom.packages.getLoadedPackage('atom-vim-like-tab').mainModule
+  let workspaceElement
+  let activationPromise
 
-  beforeEach(() => {
-    workspaceElement = atom.views.getView(atom.workspace);
-    activationPromise = atom.packages.activatePackage('atom-vim-like-tab');
-  });
+  describe('activation', () => {
+    beforeEach(() => {
+      // workspaceElement = atom.views.getView(atom.workspace)
+      waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
+    })
 
-  describe('when the atom-vim-like-tab:toggle event is triggered', () => {
-    it('hides and shows the modal panel', () => {
-      // Before the activation event the view is not on the DOM, and no panel
-      // has been created
-      expect(workspaceElement.querySelector('.atom-vim-like-tab')).not.toExist();
-
-      // This is an activation event, triggering it will cause the package to be
-      // activated.
-      atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
-
-      waitsForPromise(() => {
-        return activationPromise;
-      });
-
-      runs(() => {
-        expect(workspaceElement.querySelector('.atom-vim-like-tab')).toExist();
-
-        let atomVimLikeTabElement = workspaceElement.querySelector('.atom-vim-like-tab');
-        expect(atomVimLikeTabElement).toExist();
-
-        let atomVimLikeTabPanel = atom.workspace.panelForItem(atomVimLikeTabElement);
-        expect(atomVimLikeTabPanel.isVisible()).toBe(true);
-        atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
-        expect(atomVimLikeTabPanel.isVisible()).toBe(false);
-      });
-    });
-
-    it('hides and shows the view', () => {
-      // This test shows you an integration test testing at the view level.
-
-      // Attaching the workspaceElement to the DOM is required to allow the
-      // `toBeVisible()` matchers to work. Anything testing visibility or focus
-      // requires that the workspaceElement is on the DOM. Tests that attach the
-      // workspaceElement to the DOM are generally slower than those off DOM.
-      jasmine.attachToDOM(workspaceElement);
-
-      expect(workspaceElement.querySelector('.atom-vim-like-tab')).not.toExist();
-
-      // This is an activation event, triggering it causes the package to be
-      // activated.
-      atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
-
-      waitsForPromise(() => {
-        return activationPromise;
-      });
-
-      runs(() => {
-        // Now we can test for view visibility
-        let atomVimLikeTabElement = workspaceElement.querySelector('.atom-vim-like-tab');
-        expect(atomVimLikeTabElement).toBeVisible();
-        atom.commands.dispatch(workspaceElement, 'atom-vim-like-tab:toggle');
-        expect(atomVimLikeTabElement).not.toBeVisible();
-      });
-    });
-  });
-});
+    describe('when activated', () => {
+      it('has one tabContoller', () => {
+        expect(getMain().tabControllers).toHaveLength(1)
+        expect(getMain().tabControllers[0] instanceof TabController).toBe(true)
+      })
+    })
+    describe('when deactivated', () => {
+      beforeEach(() => {
+        atom.packages.deactivatePackage('atom-vim-like-tab')
+      })
+      it('subscriptions should be disposed', () => {
+        expect(getMain().subscriptions.disposed).toBe(true)
+      })
+      it('tabControllers should be empty', () => {
+        expect(getMain().tabControllers.length).toEqual(0)
+      })
+    })
+  })
+})
