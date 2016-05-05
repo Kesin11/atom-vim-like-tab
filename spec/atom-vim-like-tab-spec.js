@@ -14,7 +14,7 @@ import _ from 'underscore-plus'
 // done new tabしたときに新しいtabControllerができて別のpaneを持っている
 // done paneを追加したとき、activeなtabContollerに追加されていて、deiactivateには追加されないこと
 // done nextしたときにした時に今のtabがhideでdeactivate, 前のtabがshowでactivateなこと
-// paneが完全になくなったとき、tabControllerが消えていること
+// done paneが完全になくなったとき、tabControllerが消えていること
 
 describe('AtomVimLikeTab', () => {
   const getMain = () => atom.packages.getLoadedPackage('atom-vim-like-tab').mainModule
@@ -113,6 +113,24 @@ describe('AtomVimLikeTab', () => {
           _.all(previousControllerPaneViews,
             (view) => view.style.display === 'none')
           ).toBe(true)
+      })
+    })
+    describe('triggered by outside action', () => {
+      beforeEach(() => {
+        workSpaceElement = atom.views.getView(atom.workspace)
+        waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
+      })
+      afterEach(() => {
+        atom.packages.deactivatePackage('atom-vim-like-tab')
+      })
+      describe('when all panes are closed', () => {
+        it('unnecessary tabController should be removed', () => {
+          atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+          const newController = _.last(getMain().tabControllers)
+          newController.panes.forEach((pane) => pane.close())
+
+          expect(getMain().tabControllers).not.toContain(newController)
+        })
       })
     })
   })
