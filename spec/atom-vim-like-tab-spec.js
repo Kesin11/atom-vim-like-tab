@@ -53,10 +53,11 @@ describe('AtomVimLikeTab', () => {
       it('old pane should be hide', () => {
         dispatchCommand('atom-vim-like-tab:new-tab')
 
-        const oldControllerPanes = getFirstTabController().panes
-        const oldControllerPaneViews =
-          oldControllerPanes.map((pane) => atom.views.getView(pane))
-        expect(_.all(oldControllerPaneViews, (view) => view.style.display === 'none')).toBe(true)
+        const oldController = getFirstTabController()
+        expect(
+          _.all(oldController.getPaneViews(),
+          (view) => view.style.display === 'none')
+        ).toBe(true)
       })
       it('new tabControllers should be have another pane', () => {
         const beforePanes = getFirstTabController().panes
@@ -85,20 +86,16 @@ describe('AtomVimLikeTab', () => {
         dispatchCommand('atom-vim-like-tab:next')
         const showIndex = getMain().showIndex
 
-        const nextControllerPanes = getTabControllers()[showIndex].panes
-        const nextControllerPaneViews =
-          nextControllerPanes.map((pane) => atom.views.getView(pane))
-        expect(_.all(nextControllerPaneViews, (view) => view.style.display === '')).toBe(true)
+        const nextController = getTabControllers()[showIndex]
+        expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
       })
       it('previous pane should be hide', () => {
         const beforeShowIndex = getMain().showIndex
         dispatchCommand('atom-vim-like-tab:next')
 
-        const previousControllerPanes = getTabControllers()[beforeShowIndex].panes
-        const previousControllerPaneViews =
-          previousControllerPanes.map((pane) => atom.views.getView(pane))
+        const previousController = getTabControllers()[beforeShowIndex].panes
         expect(
-          _.all(previousControllerPaneViews,
+          _.all(previousController.getPaneViews,
             (view) => view.style.display === 'none')
           ).toBe(true)
       })
