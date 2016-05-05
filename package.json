@@ -12,14 +12,24 @@
   "engines": {
     "atom": ">=1.5.0 <2.0.0"
   },
+  "watch": {
+    "apm-test": {
+        "patterns": ["lib", "spec"],
+        "extensions": "js",
+        "quiet": true
+    }
+  },
   "scripts": {
-    "lint": "./node_modules/.bin/eslint lib spec"
+    "lint": "./node_modules/.bin/eslint lib spec",
+    "apm-test": "apm test",
+    "watch": "./node_modules/.bin/npm-watch"
   },
   "devDependencies": {
     "eslint": "^2.9.0",
     "eslint-config-airbnb-base": "^2.0.0",
     "eslint-plugin-import": "^1.6.1",
-    "eslint-plugin-jasmine": "^1.8.1"
+    "eslint-plugin-jasmine": "^1.8.1",
+    "npm-watch": "^0.1.4"
   },
   "dependencies": {
     "underscore-plus": "^1.6.6"
