@@ -1,7 +1,7 @@
 'use babel'
 
-import AtomVimLikeTab from '../lib/atom-vim-like-tab'
 import TabController from '../lib/tab_controller'
+import _ from 'underscore-plus'
 
 // Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 //
@@ -11,19 +11,16 @@ import TabController from '../lib/tab_controller'
 // TODO:
 // done 起動したときにtabControllersができている
 // done deactivateしたときにちゃんと色々開放されている
-// new tabしたときに新しいtabControllerができて別のpaneを持っている
-// paneを追加したとき、activeなtabContollerに追加されていて、diactivateには追加されないこと
+// done new tabしたときに新しいtabControllerができて別のpaneを持っている
+// done paneを追加したとき、activeなtabContollerに追加されていて、deiactivateには追加されないこと
 // nextしたときにした時に今のtabがhideでdiactivate, 前のtabがshowでactivateなこと
 // paneが完全になくなったとき、tabControllerが消えていること
 
 describe('AtomVimLikeTab', () => {
   const getMain = () => atom.packages.getLoadedPackage('atom-vim-like-tab').mainModule
-  let workspaceElement
-  let activationPromise
 
   describe('activation', () => {
     beforeEach(() => {
-      // workspaceElement = atom.views.getView(atom.workspace)
       waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
     })
 
@@ -42,6 +39,45 @@ describe('AtomVimLikeTab', () => {
       })
       it('tabControllers should be empty', () => {
         expect(getMain().tabControllers.length).toEqual(0)
+      })
+    })
+  })
+
+  describe('dispatch command', () => {
+    let workSpaceElement
+    beforeEach(() => {
+      workSpaceElement = atom.views.getView(atom.workspace)
+      waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
+    })
+    afterEach(() => {
+      atom.packages.deactivatePackage('atom-vim-like-tab')
+    })
+
+    describe('new-tab', () => {
+      it('tabControllers should be have new controller', () => {
+        const beforeControllersNum = getMain().tabControllers.length
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+
+        const afterControlelrs = getMain().tabControllers
+        expect(afterControlelrs.length).toBeGreaterThan(beforeControllersNum)
+      })
+      it('new tabControllers should be have another pane', () => {
+        const beforePanes = _.first(getMain().tabControllers).panes
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+
+        const newController = _.last(getMain().tabControllers)
+        const newPane = _.first(newController.panes)
+        expect(beforePanes).not.toContain(newPane)
+      })
+      it('new pane should be managed new tabContoller after new-tab command', () => {
+        atom.commands.dispatch(workSpaceElement, 'atom-vim-like-tab:new-tab')
+        atom.workspace.getActivePane().splitRight()
+        const newPane = atom.workspace.getActivePane()
+
+        const oldControllerPanes = _.first(getMain().tabControllers).panes
+        const newControllerPanes = _.last(getMain().tabControllers).panes
+        expect(oldControllerPanes).not.toContain(newPane)
+        expect(newControllerPanes).toContain(newPane)
       })
     })
   })
