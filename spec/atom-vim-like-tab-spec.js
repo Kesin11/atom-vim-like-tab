@@ -82,14 +82,7 @@ describe('AtomVimLikeTab', () => {
       beforeEach(() => {
         dispatchCommand('atom-vim-like-tab:new-tab')
       })
-      it('next pane should be show', () => {
-        dispatchCommand('atom-vim-like-tab:next')
-        const showIndex = getMain().showIndex
-
-        const nextController = getTabControllers()[showIndex]
-        expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
-      })
-      it('previous pane should be hide', () => {
+      it('current tab should be hide', () => {
         const beforeShowIndex = getMain().showIndex
         dispatchCommand('atom-vim-like-tab:next')
 
@@ -99,7 +92,35 @@ describe('AtomVimLikeTab', () => {
             (view) => view.style.display === 'none')
           ).toBe(true)
       })
+      it('next tab should be show', () => {
+        dispatchCommand('atom-vim-like-tab:next')
+        const showIndex = getMain().showIndex
+
+        const nextController = getTabControllers()[showIndex]
+        expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
+      })
     })
+
+    describe('close-tab', () => {
+      beforeEach(() => {
+        dispatchCommand('atom-vim-like-tab:new-tab')
+      })
+      it('current TabController should be removed', () => {
+        const currentController = getLastTabController()
+        dispatchCommand('atom-vim-like-tab:close-tab')
+
+        expect(currentController.panes.length).toEqual(0)
+        expect(getTabControllers()).not.toContain(currentController)
+      })
+      it('previous panes should be show', () => {
+        dispatchCommand('atom-vim-like-tab:close-tab')
+        const showIndex = getMain().showIndex
+
+        const nextController = getTabControllers()[showIndex]
+        expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
+      })
+    })
+
     describe('triggered by outside action', () => {
       beforeEach(() => {
         waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
