@@ -1,5 +1,6 @@
 'use babel'
 
+import * as path from 'path'
 import {
   getMain,
   getTabControllers,
@@ -11,6 +12,9 @@ import TabController from '../lib/tab_controller'
 import _ from 'underscore-plus'
 
 describe('AtomVimLikeTab', () => {
+  beforeEach(() => {
+    waitsForPromise(() => atom.workspace.open(path.join(__dirname, 'fixtures', 'hoge.js')))
+  })
   describe('activation', () => {
     beforeEach(() => {
       waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
@@ -100,24 +104,34 @@ describe('AtomVimLikeTab', () => {
         expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
       })
     })
-
     describe('close', () => {
-      beforeEach(() => {
-        dispatchCommand('atom-vim-like-tab:new')
-      })
-      it('current TabController should be removed', () => {
-        const currentController = getLastTabController()
-        dispatchCommand('atom-vim-like-tab:close')
+      describe('when before create new tab', () => {
+        it('last TabController should not be removed', () => {
+          const initController = getFirstTabController()
+          dispatchCommand('atom-vim-like-tab:close')
 
-        expect(currentController.panes.length).toEqual(0)
-        expect(getTabControllers()).not.toContain(currentController)
+          expect(initController.panes.length).toEqual(1)
+          expect(getTabControllers()).toContain(initController)
+        })
       })
-      it('previous panes should be show', () => {
-        dispatchCommand('atom-vim-like-tab:close')
-        const showIndex = getMain().showIndex
+      describe('when after carete new tab', () => {
+        beforeEach(() => {
+          dispatchCommand('atom-vim-like-tab:new')
+        })
+        it('current TabController should be removed', () => {
+          const currentController = getLastTabController()
+          dispatchCommand('atom-vim-like-tab:close')
 
-        const nextController = getTabControllers()[showIndex]
-        expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
+          expect(currentController.panes.length).toEqual(0)
+          expect(getTabControllers()).not.toContain(currentController)
+        })
+        it('previous panes should be show', () => {
+          dispatchCommand('atom-vim-like-tab:close')
+          const showIndex = getMain().showIndex
+
+          const nextController = getTabControllers()[showIndex]
+          expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
+        })
       })
     })
 
