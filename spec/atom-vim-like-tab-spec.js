@@ -13,7 +13,7 @@ import _ from 'underscore-plus'
 
 describe('AtomVimLikeTab', () => {
   beforeEach(() => {
-    waitsForPromise(() => atom.workspace.open(path.join(__dirname, 'fixtures', 'hoge.js')))
+    waitsForPromise(() => atom.workspace.open(path.join(__dirname, 'fixtures', 'dummy.txt')))
   })
   describe('activation', () => {
     beforeEach(() => {
