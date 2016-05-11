@@ -23,7 +23,7 @@ describe('AtomVimLikeTab', () => {
     describe('when activated', () => {
       it('has one tabContoller', () => {
         expect(getTabControllers()).toHaveLength(1)
-        expect(getTabControllers()[0] instanceof TabController).toBe(true)
+        expect(getTabControllers()[0]).toBeInstanceOf(TabController)
       })
     })
     describe('when deactivated', () => {
@@ -34,7 +34,7 @@ describe('AtomVimLikeTab', () => {
         expect(getMain().subscriptions.disposed).toBe(true)
       })
       it('tabControllers should be empty', () => {
-        expect(getTabControllers().length).toEqual(0)
+        expect(getTabControllers()).toHaveLength(0)
       })
     })
   })
@@ -112,7 +112,7 @@ describe('AtomVimLikeTab', () => {
           const initController = getFirstTabController()
           dispatchCommand('atom-vim-like-tab:close')
 
-          expect(initController.panes.length).toEqual(1)
+          expect(initController.panes).toHaveLength(1)
           expect(getTabControllers()).toContain(initController)
         })
       })
@@ -124,7 +124,7 @@ describe('AtomVimLikeTab', () => {
           const currentController = getLastTabController()
           dispatchCommand('atom-vim-like-tab:close')
 
-          expect(currentController.panes.length).toEqual(0)
+          expect(currentController.panes).toHaveLength(0)
           expect(getTabControllers()).not.toContain(currentController)
         })
         it('previous panes should be show', () => {
