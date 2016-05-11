@@ -59,9 +59,9 @@ describe('AtomVimLikeTab', () => {
 
         const oldController = getFirstTabController()
         expect(
-          _.all(oldController.getPaneViews(),
-          (view) => view.style.display === 'none')
-        ).toBe(true)
+          oldController.getPaneViews().every(
+            (view) => view.style.display === 'none'
+          )).toBe(true)
       })
       it('new tabControllers should be have another pane', () => {
         const beforePanes = getFirstTabController().panes
@@ -90,18 +90,20 @@ describe('AtomVimLikeTab', () => {
         const beforeShowIndex = getMain().showIndex
         dispatchCommand('atom-vim-like-tab:next')
 
-        const previousController = getTabControllers()[beforeShowIndex].panes
+        const previousController = getTabControllers()[beforeShowIndex]
         expect(
-          _.all(previousController.getPaneViews,
-            (view) => view.style.display === 'none')
-          ).toBe(true)
+          previousController.getPaneViews().every(
+            (view) => view.style.display === 'none'
+          )).toBe(true)
       })
       it('next tab should be show', () => {
         dispatchCommand('atom-vim-like-tab:next')
         const showIndex = getMain().showIndex
 
         const nextController = getTabControllers()[showIndex]
-        expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
+        expect(nextController.getPaneViews().every(
+          (view) => view.style.display === ''
+        )).toBe(true)
       })
     })
     describe('close', () => {
@@ -130,7 +132,9 @@ describe('AtomVimLikeTab', () => {
           const showIndex = getMain().showIndex
 
           const nextController = getTabControllers()[showIndex]
-          expect(_.all(nextController.getPaneViews, (view) => view.style.display === '')).toBe(true)
+          expect(nextController.getPaneViews().every(
+            (view) => view.style.display === ''
+          )).toBe(true)
         })
       })
     })
