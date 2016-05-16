@@ -105,6 +105,13 @@ describe('AtomVimLikeTab', () => {
           (view) => view.style.display === ''
         )).toBe(true)
       })
+      it('next tab pane should be activated', () => {
+        dispatchCommand('atom-vim-like-tab:next')
+        const showIndex = getMain().showIndex
+        const nextController = getTabControllers()[showIndex]
+
+        expect(nextController.panes[0]).toBe(atom.workspace.getActivePane())
+      })
     })
     describe('close', () => {
       describe('when before create new tab', () => {
@@ -130,11 +137,18 @@ describe('AtomVimLikeTab', () => {
         it('previous panes should be show', () => {
           dispatchCommand('atom-vim-like-tab:close')
           const showIndex = getMain().showIndex
+          const previousController = getTabControllers()[showIndex]
 
-          const nextController = getTabControllers()[showIndex]
-          expect(nextController.getPaneViews().every(
+          expect(previousController.getPaneViews().every(
             (view) => view.style.display === ''
           )).toBe(true)
+        })
+        it('previous tab pane should be activated', () => {
+          dispatchCommand('atom-vim-like-tab:close')
+          const showIndex = getMain().showIndex
+          const previousController = getTabControllers()[showIndex]
+
+          expect(previousController.panes[0]).toBe(atom.workspace.getActivePane())
         })
       })
     })
