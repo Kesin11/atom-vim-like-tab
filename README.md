@@ -12,6 +12,7 @@ It enumerate vim tab features.
 - `atom-vim-like-tab:close`: close current tab
 - `atom-vim-like-tab:previous`: show previous tab
 - `atom-vim-like-tab:next`: show next tab
+- `atom-vim-like-tab:list`: open tab select panel
 
 # Keymap
 
@@ -24,11 +25,12 @@ Here is my example
   ': t a b c': 'atom-vim-like-tab:close'
   't p': 'atom-vim-like-tab:previous'
   't n': 'atom-vim-like-tab:next'
+  'space t': 'atom-vim-like-tab:list'
 ```
 
 # Future work
 - [ ] Add packages menu
-- [ ] Add list view feature for show and select tab
+- [x] Add list view feature for show and select tab
 - [ ] Always show how many tab and which is current tab. inspire by vim
 
 # License
