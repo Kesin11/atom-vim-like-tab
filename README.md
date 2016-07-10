@@ -30,7 +30,7 @@ Here is my example
 ```
 
 # Future work
-- [ ] Add packages menu
+- [x] Add packages menu
 - [x] Add list view feature for show and select tab
 - [ ] Always show how many tab and which is current tab. inspire by vim
 
