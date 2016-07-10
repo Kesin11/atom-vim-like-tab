@@ -1,12 +1,4 @@
 {
-  "context-menu": {
-    "atom-text-editor": [
-      {
-        "label": "Toggle atom-vim-like-tab",
-        "command": "atom-vim-like-tab:toggle"
-      }
-    ]
-  },
   "menu": [
     {
       "label": "Packages",
@@ -15,8 +7,24 @@
           "label": "atom-vim-like-tab",
           "submenu": [
             {
-              "label": "Toggle",
-              "command": "atom-vim-like-tab:toggle"
+              "label": "New",
+              "command": "atom-vim-like-tab:new"
+            },
+            {
+              "label": "Close",
+              "command": "atom-vim-like-tab:close"
+            },
+            {
+              "label": "Next",
+              "command": "atom-vim-like-tab:next"
+            },
+            {
+              "label": "Previous",
+              "command": "atom-vim-like-tab:previous"
+            },
+            {
+              "label": "List",
+              "command": "atom-vim-like-tab:list"
             }
           ]
         }
