@@ -1,12 +1,4 @@
 {
-  "context-menu": {
-    "atom-text-editor": [
-      {
-        "label": "Toggle atom-vim-like-tab",
-        "command": "atom-vim-like-tab:toggle"
-      }
-    ]
-  },
   "menu": [
     {
       "label": "Packages",
