@@ -4,11 +4,29 @@
 // for a full listing of what's available.
 @import "ui-variables";
 
+// list view
 .atom-vim-like-tab {
   ol.list-group {
     max-height: 600px
   }
   .secondary-line.margin-left {
     margin-left: 10px
+  }
+}
+
+// top panel
+.atom-vim-like-tab {
+  .top-panel {
+    background-color: #666;
+    color: #EEE;
+    span {
+      padding-right: 5px;
+      padding-left: 5px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+    span.active {
+      background-color: #444;
+    }
   }
 }
