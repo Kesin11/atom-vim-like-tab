@@ -32,7 +32,7 @@ Here is my example
 # Future work
 - [x] Add packages menu
 - [x] Add list view feature for show and select tab
-- [ ] Always show how many tab and which is current tab. inspire by vim
+- [x] Always show how many tab and which is current tab. inspire by vim
 
 # License
 MIT
