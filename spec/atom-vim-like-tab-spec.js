@@ -14,12 +14,13 @@ import _ from 'underscore-plus'
 describe('AtomVimLikeTab', () => {
   beforeEach(() => {
     waitsForPromise(() => atom.workspace.open(path.join(__dirname, 'fixtures', 'dummy.txt')))
+    waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
   })
-  describe('activation', () => {
-    beforeEach(() => {
-      waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
-    })
+  afterEach(() => {
+    atom.packages.deactivatePackage('atom-vim-like-tab')
+  })
 
+  describe('activation', () => {
     describe('when activated', () => {
       it('has one tabContoller', () => {
         expect(getTabControllers()).toHaveLength(1)
@@ -40,13 +41,6 @@ describe('AtomVimLikeTab', () => {
   })
 
   describe('dispatch command', () => {
-    beforeEach(() => {
-      waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
-    })
-    afterEach(() => {
-      atom.packages.deactivatePackage('atom-vim-like-tab')
-    })
-
     describe('new', () => {
       it('tabControllers should be have new controller', () => {
         const beforeControllersNum = getTabControllers().length
@@ -154,12 +148,6 @@ describe('AtomVimLikeTab', () => {
     })
 
     describe('triggered by outside action', () => {
-      beforeEach(() => {
-        waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
-      })
-      afterEach(() => {
-        atom.packages.deactivatePackage('atom-vim-like-tab')
-      })
       describe('when all panes are closed', () => {
         it('unnecessary tabController should be removed', () => {
           // create new tab and then close all pane
