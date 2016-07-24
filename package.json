@@ -13,16 +13,6 @@
   "engines": {
     "atom": ">=1.7.0 <2.0.0"
   },
-  "watch": {
-    "apm-test": {
-      "patterns": [
-        "lib",
-        "spec"
-      ],
-      "extensions": "js",
-      "quiet": true
-    }
-  },
   "scripts": {
     "lint": "./node_modules/.bin/eslint lib spec",
     "apm-test": "apm test",
@@ -38,5 +28,22 @@
   "dependencies": {
     "atom-space-pen-views": "^2.2.0",
     "underscore-plus": "^1.6.6"
+  },
+  "configSchema": {
+    "enableTopTabPanel": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enable, vim like tab list will shown on top of editor view."
+    }
+  },
+  "watch": {
+    "apm-test": {
+      "patterns": [
+        "lib",
+        "spec"
+      ],
+      "extensions": "js",
+      "quiet": true
+    }
   }
 }
