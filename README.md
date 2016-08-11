@@ -5,7 +5,7 @@ Add Vim like tab features in Atom
 Create virtual window that can have multiple pane.
 It emulate vim tab features.
 
-![atom-vim-like-tab.gif](https://raw.githubusercontent.com/Kesin11/atom-vim-like-tab/images/images/atom-vim-like-tab.gif)
+![atom-vim-like-tab.gif](https://raw.githubusercontent.com/Kesin11/atom-vim-like-tab/images/images/atom-vim-like-tab1_2.gif)
 ![tab_list_view.png](https://raw.githubusercontent.com/Kesin11/atom-vim-like-tab/images/images/tab_list_view.png)
 
 # Commands
