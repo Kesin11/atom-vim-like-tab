@@ -1,3 +1,7 @@
+## 1.2.1 - Fix TabListView with empty panes
+Fixes #1
+Merge pull request #2 from josa42/fix-tab-list-with-empty-panes
+
 ## 1.2.0 - Add vim like tab list in top panel view
 * Show vim like tab list on top of editor view
 * Refactoring spec
