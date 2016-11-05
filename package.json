@@ -34,6 +34,11 @@
       "type": "boolean",
       "default": true,
       "description": "If enable, vim like tab list will shown on top of editor view."
+    },
+    "dontRestoreInactiveTabsPane": {
+      "type": "boolean",
+      "default": false,
+      "description": "At startup, prevents restoring the tabs that inactived at the time of last quit. ## NOTE: This function using atom private API. Maybe not working newer atom version ##"
     }
   },
   "watch": {

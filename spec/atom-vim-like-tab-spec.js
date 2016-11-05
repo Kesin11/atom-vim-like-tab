@@ -38,6 +38,30 @@ describe('AtomVimLikeTab', () => {
         expect(getTabControllers()).toHaveLength(0)
       })
     })
+    describe('when deactivate with config "dontRestoreInactiveTabsPane"', () => {
+      let inactivePaneIds = undefined
+      let activePaneId = undefined
+      beforeEach(() => {
+        atom.config.set('atom-vim-like-tab.dontRestoreInactiveTabsPane', true)
+        dispatchCommand('atom-vim-like-tab:new')
+        dispatchCommand('atom-vim-like-tab:new')
+        dispatchCommand('atom-vim-like-tab:new')
+        inactivePaneIds = getTabControllers()
+          .filter(tabController => !tabController.isActive)
+          .map(tabController => tabController.panes[0].id)
+        activePaneId = getLastTabController().panes[0].id
+
+        atom.packages.deactivatePackage('atom-vim-like-tab')
+      })
+      it('inactive tabs pane should be closed', () => {
+        const paneIds = atom.workspace.getPanes().map(pane => pane.id)
+        expect(paneIds).toContain(activePaneId)
+
+        for (const inactivePaneId of inactivePaneIds) {
+          expect(paneIds).not.toContain(inactivePaneId)
+        }
+      })
+    })
   })
 
   describe('dispatch command', () => {

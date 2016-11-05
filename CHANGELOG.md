@@ -1,3 +1,6 @@
+## 1.3.0 -  Add config
+* Add dontRestoreInactiveTabsPane config (default: false)
+
 ## 1.2.1 - Fix TabListView with empty panes
 Fixes #1
 Merge pull request #2 from josa42/fix-tab-list-with-empty-panes
