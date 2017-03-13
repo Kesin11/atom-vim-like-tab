@@ -17,7 +17,8 @@
     ],
     "rules": {
       semi: ["error", "never"],
-      import/no-unresolved: [2, { ignore: ['atom'] }]
+      import/no-unresolved: [2, { ignore: ['atom'] }],
+      no-underscore-dangle: ["error", { "allowAfterThis": true }]
     },
     "globals":{
         "atom": false,
