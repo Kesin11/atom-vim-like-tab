@@ -1,6 +1,7 @@
 {
     "parserOptions": {
-      "ecmaVersion": 6,
+      "ecmaVersion": 2017,
+      "sourceType": "module",
       "ecmaFeatures": {
         "jsx": true
       }
@@ -9,25 +10,18 @@
         "jasmine"
     ],
     "env": {
-      "jasmine": true
+      "node": true,
+      "jasmine": true,
+      "atomtest": true
     },
     "extends": [
-      "airbnb-base",
+      "eslint:recommended",
       "plugin:jasmine/recommended",
     ],
     "rules": {
       semi: ["error", "never"],
-      import/no-unresolved: [2, { ignore: ['atom'] }],
-      no-underscore-dangle: ["error", { "allowAfterThis": true }],
-      comma-dangle: ['error', {
-        arrays: 'always-multiline',
-        objects: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'always-multiline',
-      }],
     },
     "globals":{
         "atom": false,
-        "waitsForPromise": false
     }
 }
