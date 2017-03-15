@@ -1,20 +1,27 @@
 {
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
     "plugins": [
         "jasmine"
     ],
     "env": {
-      "jasmine": true
+      "node": true,
+      "jasmine": true,
+      "atomtest": true
     },
     "extends": [
-      "airbnb-base",
+      "eslint:recommended",
       "plugin:jasmine/recommended",
     ],
     "rules": {
       semi: ["error", "never"],
-      import/no-unresolved: [2, { ignore: ['atom'] }]
     },
     "globals":{
         "atom": false,
-        "waitsForPromise": false
     }
 }
