@@ -1,3 +1,6 @@
+## 1.3.1 -  Refactoring
+* Rewrite some view using atom/etch
+
 ## 1.3.0 -  Add config
 * Add dontRestoreInactiveTabsPane config (default: false)
 
