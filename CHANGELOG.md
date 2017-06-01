@@ -1,3 +1,6 @@
+## 1.4.0 -  Support Atom 1.17
+* Fix some problems by new Dock API from Atom 1.17
+
 ## 1.3.1 -  Refactoring
 * Rewrite some view using atom/etch
 
