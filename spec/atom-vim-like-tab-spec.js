@@ -54,7 +54,7 @@ describe('AtomVimLikeTab', () => {
         atom.packages.deactivatePackage('atom-vim-like-tab')
       })
       it('inactive tabs pane should be closed', () => {
-        const paneIds = atom.workspace.getPanes().map(pane => pane.id)
+        const paneIds = atom.workspace.getCenter().getPanes().map(pane => pane.id)
         expect(paneIds).toContain(activePaneId)
 
         for (const inactivePaneId of inactivePaneIds) {
@@ -90,8 +90,8 @@ describe('AtomVimLikeTab', () => {
       })
       it('new pane should be managed new tabContoller after new command', () => {
         dispatchCommand('atom-vim-like-tab:new')
-        atom.workspace.getActivePane().splitRight()
-        const newPane = atom.workspace.getActivePane()
+        atom.workspace.getCenter().getActivePane().splitRight()
+        const newPane = atom.workspace.getCenter().getActivePane()
 
         const oldControllerPanes = getFirstTabController().panes
         const newControllerPanes = getLastTabController().panes
@@ -128,7 +128,7 @@ describe('AtomVimLikeTab', () => {
         const showIndex = getMain().showIndex
         const nextController = getTabControllers()[showIndex]
 
-        expect(nextController.panes[0]).toBe(atom.workspace.getActivePane())
+        expect(nextController.panes[0]).toBe(atom.workspace.getCenter().getActivePane())
       })
     })
     describe('close', () => {
@@ -166,7 +166,7 @@ describe('AtomVimLikeTab', () => {
           const showIndex = getMain().showIndex
           const previousController = getTabControllers()[showIndex]
 
-          expect(previousController.panes[0]).toBe(atom.workspace.getActivePane())
+          expect(previousController.panes[0]).toBe(atom.workspace.getCenter().getActivePane())
         })
       })
     })
