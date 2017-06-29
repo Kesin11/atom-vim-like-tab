@@ -16,7 +16,9 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint lib spec",
     "apm-test": "apm test",
-    "watch": "./node_modules/.bin/npm-watch"
+    "apm-beta-test": "apm test --path=`which atom-beta`",
+    "watch": "./node_modules/.bin/npm-watch apm-test",
+    "watch-beta": "./node_modules/.bin/npm-watch apm-beta-test"
   },
   "devDependencies": {
     "eslint": "^3.17.1",
@@ -44,6 +46,14 @@
   },
   "watch": {
     "apm-test": {
+      "patterns": [
+        "lib",
+        "spec"
+      ],
+      "extensions": "js",
+      "quiet": true
+    },
+    "apm-beta-test": {
       "patterns": [
         "lib",
         "spec"
