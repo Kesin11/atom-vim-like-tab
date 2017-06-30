@@ -29,6 +29,41 @@ Here is my example
   'space t': 'atom-vim-like-tab:list'
 ```
 
+If you're using [ex-mode](https://atom.io/packages/ex-mode) here are a few additional shortcuts to be more like Real Vim (plus, it should be easy to see how to add your own!)
+```
+// keymap.cson
+'.editor.vim-mode-plus:not(.insert-mode)':
+  'g t c': 'atom-vim-like-tab:new'
+  'g t': 'atom-vim-like-tab:next'
+  'g T': 'atom-vim-like-tab:previous'
+```
+```
+// init.coffee
+atom.packages.onDidActivatePackage (pack) ->
+  if pack.name == 'ex-mode'
+    Ex = pack.mainModule.provideEx()
+    Ex.registerCommand 'tabs', ->
+      atomWorkspace = atom.views.getView(atom.workspace)
+      setTimeout ->
+        atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:list')
+      , 0
+    Ex.registerCommand 'tabn', ->
+      atomWorkspace = atom.views.getView(atom.workspace)
+      setTimeout ->
+        atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:next')
+      , 0
+    Ex.registerCommand 'tabp', ->
+      atomWorkspace = atom.views.getView(atom.workspace)
+      setTimeout ->
+        atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:previous')
+      , 0
+    Ex.registerCommand 'tabclose', ->
+      atomWorkspace = atom.views.getView(atom.workspace)
+      setTimeout ->
+        atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:close')
+      , 0
+```
+
 # Future work
 - [x] Add packages menu
 - [x] Add list view feature for show and select tab
