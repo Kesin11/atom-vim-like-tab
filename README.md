@@ -33,7 +33,6 @@ If you're using [ex-mode](https://atom.io/packages/ex-mode) here are a few addit
 ```
 // keymap.cson
 '.editor.vim-mode-plus:not(.insert-mode)':
-  'g t c': 'atom-vim-like-tab:new'
   'g t': 'atom-vim-like-tab:next'
   'g T': 'atom-vim-like-tab:previous'
 ```
@@ -46,6 +45,11 @@ atom.packages.onDidActivatePackage (pack) ->
       atomWorkspace = atom.views.getView(atom.workspace)
       setTimeout ->
         atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:list')
+      , 0
+    Ex.registerCommand 'tab', ->
+      atomWorkspace = atom.views.getView(atom.workspace)
+      setTimeout ->
+        atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:new')
       , 0
     Ex.registerCommand 'tabn', ->
       atomWorkspace = atom.views.getView(atom.workspace)
@@ -61,7 +65,7 @@ atom.packages.onDidActivatePackage (pack) ->
       atomWorkspace = atom.views.getView(atom.workspace)
       setTimeout ->
         atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:close')
-      , 0
+      , 
 ```
 
 # Future work
