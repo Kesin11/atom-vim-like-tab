@@ -1,3 +1,6 @@
+## 1.4.1 -  Support Atom 1.19
+* Fix #3. Fix some spec for atom 1.19 breaking change Pane.close()
+
 ## 1.4.0 -  Support Atom 1.17
 * Fix some problems by new Dock API from Atom 1.17
 
