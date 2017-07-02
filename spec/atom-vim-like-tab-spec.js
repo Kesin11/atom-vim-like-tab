@@ -13,6 +13,10 @@ import _ from 'underscore-plus'
 
 describe('AtomVimLikeTab', () => {
   beforeEach(() => {
+    // for using simple timeout Promise in this spec.
+    // see https://discuss.atom.io/t/solved-settimeout-not-working-firing-in-specs-tests/11427/18
+    jasmine.unspy(window, 'setTimeout')
+
     waitsForPromise(() => atom.workspace.open(path.join(__dirname, 'fixtures', 'dummy.txt')))
     waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
   })
@@ -52,6 +56,10 @@ describe('AtomVimLikeTab', () => {
         activePaneId = getLastTabController().panes[0].id
 
         atom.packages.deactivatePackage('atom-vim-like-tab')
+
+        // hack for pane.close() called by atom-vim-like-tab:close completly done.
+        // because dispatchCommand() can't return promise.
+        waitsForPromise(() => new Promise(resolve => setTimeout(resolve, 100)))
       })
       it('inactive tabs pane should be closed', () => {
         const paneIds = atom.workspace.getCenter().getPanes().map(pane => pane.id)
@@ -148,6 +156,10 @@ describe('AtomVimLikeTab', () => {
           currentController = getLastTabController()
 
           dispatchCommand('atom-vim-like-tab:close')
+
+          // hack for pane.close() called by atom-vim-like-tab:close completly done.
+          // because dispatchCommand() can't return promise.
+          waitsForPromise(() => new Promise(resolve => setTimeout(resolve, 100)))
         })
         it('current TabController should be removed', () => {
 
@@ -177,9 +189,13 @@ describe('AtomVimLikeTab', () => {
           // create new tab and then close all pane
           dispatchCommand('atom-vim-like-tab:new')
           const newController = getLastTabController()
-          newController.panes.forEach((pane) => pane.close())
+          const closePromises = newController.panes.map((pane) => pane.close())
 
-          expect(getTabControllers()).not.toContain(newController)
+          waitsForPromise(() => Promise.all(closePromises))
+
+          runs(() => {
+            expect(getTabControllers()).not.toContain(newController)
+          })
         })
       })
     })
