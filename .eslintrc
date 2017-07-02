@@ -12,7 +12,9 @@
     "env": {
       "node": true,
       "jasmine": true,
-      "atomtest": true
+      "atomtest": true,
+      "browser": true,
+      "es6": true,
     },
     "extends": [
       "eslint:recommended",
