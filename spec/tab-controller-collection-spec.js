@@ -8,6 +8,7 @@ describe('tabControllerCollection', () => {
   beforeEach(() => {
     tabControllerCollection = new TabControllerCollection()
   })
+
   afterEach(() => {
   })
 
@@ -17,6 +18,7 @@ describe('tabControllerCollection', () => {
 
     expect(tabControllerCollection.tabControllers[0]).toBe(tabController)
   })
+
   it('remove', () => {
     const firstTabController = new TabController()
     const secondTabController = new TabController()
@@ -26,8 +28,10 @@ describe('tabControllerCollection', () => {
     tabControllerCollection.remove(firstTabController)
 
     expect(tabControllerCollection.tabControllers[0]).toBe(secondTabController)
+
     expect(tabControllerCollection.length).toBe(1)
   })
+
   it('length', () => {
     expect(tabControllerCollection.length).toBe(0)
 
@@ -36,6 +40,7 @@ describe('tabControllerCollection', () => {
 
     expect(tabControllerCollection.length).toBe(1)
   })
+
   it('destroy', () => {
     const firstTabController = new TabController()
     const secondTabController = new TabController()
@@ -45,6 +50,7 @@ describe('tabControllerCollection', () => {
     tabControllerCollection.destroy()
 
     expect(tabControllerCollection.tabControllers).toHaveLength(0)
+
     expect(tabControllerCollection.length).toBe(0)
   })
 })
