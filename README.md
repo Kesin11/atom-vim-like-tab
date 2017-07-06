@@ -65,7 +65,7 @@ atom.packages.onDidActivatePackage (pack) ->
       atomWorkspace = atom.views.getView(atom.workspace)
       setTimeout ->
         atom.commands.dispatch(atomWorkspace, 'atom-vim-like-tab:close')
-      , 
+      , 0
 ```
 
 # Future work
