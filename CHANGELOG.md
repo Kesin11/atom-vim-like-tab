@@ -1,3 +1,6 @@
+## 1.4.2 -  Fix README
+* #4 Update readme to include more shortcuts
+
 ## 1.4.1 -  Support Atom 1.19
 * Fix #3. Fix some spec for atom 1.19 breaking change Pane.close()
 
