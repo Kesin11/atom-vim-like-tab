@@ -1,3 +1,6 @@
+## 1.4.3 - bugfix
+* Bugfix 'dontRestoreInactiveTabsPane' config does not work
+
 ## 1.4.2 -  Fix README
 * #4 Update readme to include more shortcuts
 
