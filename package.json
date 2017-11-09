@@ -21,6 +21,8 @@
     "watch-beta": "./node_modules/.bin/npm-watch apm-beta-test"
   },
   "devDependencies": {
+    "atom-mocha-test-runner": "1.2.0",
+    "chai": "4.1.2",
     "eslint": "^3.17.1",
     "eslint-config-airbnb-base": "^11.1.1",
     "eslint-plugin-import": "^2.2.0",
@@ -61,5 +63,6 @@
       "extensions": "js",
       "quiet": true
     }
-  }
+  },
+  "atomTestRunner": "atom-mocha-test-runner"
 }
