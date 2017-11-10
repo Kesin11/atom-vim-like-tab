@@ -14,6 +14,7 @@ import TabController from '../lib/tab_controller'
 
 describe('AtomVimLikeTab', () => {
   beforeEach(async () => {
+      console.log(process.env.ATOM_HOME) // eslint-disable-line
       window.atom = global.buildAtomEnvironment({
         window: window,
         configDirPath: process.env.ATOM_HOME,
