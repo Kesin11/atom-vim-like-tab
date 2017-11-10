@@ -64,5 +64,5 @@
       "quiet": true
     }
   },
-  "atomTestRunner": "atom-mocha-test-runner"
+  "atomTestRunner": "./spec/runner"
 }
