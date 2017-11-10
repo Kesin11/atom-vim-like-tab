@@ -14,7 +14,8 @@ import TabController from '../lib/tab_controller'
 
 describe('AtomVimLikeTab', () => {
   beforeEach(async () => {
-      global.atom = global.buildAtomEnvironment({
+      window.atom = global.buildAtomEnvironment({
+        window: window,
         configDirPath: process.env.ATOM_HOME,
         enablePersistence: false
       })
