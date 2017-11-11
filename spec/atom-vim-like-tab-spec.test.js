@@ -1,40 +1,36 @@
 'use babel'
 
+import AtomVimLikeTab from '../lib/atom-vim-like-tab'
 import { expect } from 'chai'
 import * as path from 'path'
-import {
+// import {
   // getMain,
-  getTabControllers,
+  // getTabControllers,
   // getFirstTabController,
   // getLastTabController,
   // dispatchCommand,
-} from './spec-helper.js'
+// } from './spec-helper.js'
 import TabController from '../lib/tab_controller'
 // import _ from 'underscore-plus'
 
 describe('AtomVimLikeTab', () => {
+  let atomVimLikeTab
   beforeEach(async () => {
-      console.log(process.env.ATOM_HOME) // eslint-disable-line
-      window.atom = global.buildAtomEnvironment({
-        window: window,
-        configDirPath: process.env.ATOM_HOME,
-        enablePersistence: false
-      })
-
+      atomVimLikeTab = new AtomVimLikeTab()
+      await atomVimLikeTab.activate()
       await atom.workspace.open(path.join(__dirname, 'fixtures', 'dummy.txt'))
-      await atom.packages.activatePackage('atom-vim-like-tab')
   })
 
   afterEach(() => {
-    atom.packages.deactivatePackage('atom-vim-like-tab')
+    atomVimLikeTab.deactivate()
   })
 
   describe('activation', () => {
     describe('when activated', () => {
       it('has one tabContoller', () => {
-        expect(getTabControllers()).to.have.lengthOf(1)
+        expect(atomVimLikeTab.tabControllers()).to.have.lengthOf(1)
 
-        expect(getTabControllers()[0]).to.be.instanceOf(TabController)
+        expect(atomVimLikeTab.tabControllers()[0]).to.be.instanceOf(TabController)
       })
     })
   //
