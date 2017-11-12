@@ -15,12 +15,14 @@
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint lib spec",
-    "apm-test": "apm test",
-    "apm-beta-test": "apm test --path=`which atom-beta`",
-    "watch": "./node_modules/.bin/npm-watch apm-test",
-    "watch-beta": "./node_modules/.bin/npm-watch apm-beta-test"
+    "test": "atom --test ./spec/*",
+    "test:beta": "atom --test ./spec/*",
+    "watch": "./node_modules/.bin/npm-watch test",
+    "watch:beta": "./node_modules/.bin/npm-watch test:beta"
   },
   "devDependencies": {
+    "atom-mocha-test-runner": "1.2.0",
+    "chai": "4.1.2",
     "eslint": "^3.17.1",
     "eslint-config-airbnb-base": "^11.1.1",
     "eslint-plugin-import": "^2.2.0",
@@ -45,7 +47,7 @@
     }
   },
   "watch": {
-    "apm-test": {
+    "test": {
       "patterns": [
         "lib",
         "spec"
@@ -53,7 +55,7 @@
       "extensions": "js",
       "quiet": true
     },
-    "apm-beta-test": {
+    "test:beta": {
       "patterns": [
         "lib",
         "spec"
@@ -61,5 +63,6 @@
       "extensions": "js",
       "quiet": true
     }
-  }
+  },
+  "atomTestRunner": "atom-mocha-test-runner"
 }

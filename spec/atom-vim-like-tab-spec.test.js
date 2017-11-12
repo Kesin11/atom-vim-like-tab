@@ -1,8 +1,9 @@
 'use babel'
 
+import AtomVimLikeTab from '../lib/atom-vim-like-tab'
+import { expect } from 'chai'
 import * as path from 'path'
 import {
-  getMain,
   getTabControllers,
   getFirstTabController,
   getLastTabController,
@@ -12,39 +13,37 @@ import TabController from '../lib/tab_controller'
 import _ from 'underscore-plus'
 
 describe('AtomVimLikeTab', () => {
-  beforeEach(() => {
-    // for using simple timeout Promise in this spec.
-    // see https://discuss.atom.io/t/solved-settimeout-not-working-firing-in-specs-tests/11427/18
-    jasmine.unspy(window, 'setTimeout')
-
-    waitsForPromise(() => atom.workspace.open(path.join(__dirname, 'fixtures', 'dummy.txt')))
-    waitsForPromise(() => atom.packages.activatePackage('atom-vim-like-tab'))
+  let atomVimLikeTab
+  beforeEach(async () => {
+      atomVimLikeTab = new AtomVimLikeTab()
+      await atomVimLikeTab.activate()
+      await atom.workspace.open(path.join(__dirname, 'fixtures', 'dummy.txt'))
   })
 
   afterEach(() => {
-    atom.packages.deactivatePackage('atom-vim-like-tab')
+    atomVimLikeTab.deactivate()
   })
 
   describe('activation', () => {
     describe('when activated', () => {
       it('has one tabContoller', () => {
-        expect(getTabControllers()).toHaveLength(1)
+        expect(getTabControllers(atomVimLikeTab)).to.have.lengthOf(1)
 
-        expect(getTabControllers()[0]).toBeInstanceOf(TabController)
+        expect(getFirstTabController(atomVimLikeTab)).to.be.instanceOf(TabController)
       })
     })
 
     describe('when deactivated', () => {
       beforeEach(() => {
-        atom.packages.deactivatePackage('atom-vim-like-tab')
+        atomVimLikeTab.deactivate()
       })
 
       it('subscriptions should be disposed', () => {
-        expect(getMain().subscriptions.disposed).toBe(true)
+        expect(atomVimLikeTab.subscriptions.disposed).to.be.true
       })
 
       it('tabControllers should be empty', () => {
-        expect(getTabControllers()).toHaveLength(0)
+        expect(getTabControllers(atomVimLikeTab)).to.have.lengthOf(0)
       })
     })
 
@@ -52,30 +51,30 @@ describe('AtomVimLikeTab', () => {
       let inactivePaneIds = undefined
       let activePaneId = undefined
 
-      beforeEach(() => {
+      beforeEach(async () => {
         atom.config.set('atom-vim-like-tab.dontRestoreInactiveTabsPane', true)
         dispatchCommand('atom-vim-like-tab:new')
         dispatchCommand('atom-vim-like-tab:new')
         dispatchCommand('atom-vim-like-tab:new')
-        inactivePaneIds = getTabControllers()
+        inactivePaneIds = getTabControllers(atomVimLikeTab)
           .filter(tabController => !tabController.isActive)
           .map(tabController => tabController.panes[0].id)
-        activePaneId = getLastTabController().panes[0].id
+        activePaneId = getLastTabController(atomVimLikeTab).panes[0].id
 
-        atom.packages.deactivatePackage('atom-vim-like-tab')
+        atomVimLikeTab.deactivate()
 
         // hack for pane.close() called by atom-vim-like-tab:close completly done.
         // because dispatchCommand() can't return promise.
-        waitsForPromise(() => new Promise(resolve => setTimeout(resolve, 100)))
+        await new Promise(resolve => setTimeout(resolve, 100))
       })
 
       it('inactive tabs pane should be closed', () => {
         const paneIds = atom.workspace.getCenter().getPanes().map(pane => pane.id)
 
-        expect(paneIds).toContain(activePaneId)
+        expect(paneIds).to.contain(activePaneId)
 
         for (const inactivePaneId of inactivePaneIds) {
-          expect(paneIds).not.toContain(inactivePaneId)
+          expect(paneIds).to.not.contain(inactivePaneId)
         }
       })
     })
@@ -85,30 +84,30 @@ describe('AtomVimLikeTab', () => {
     describe('new', () => {
 
       it('tabControllers should be have new controller', () => {
-        const beforeControllersNum = getTabControllers().length
+        const beforeControllersNum = getTabControllers(atomVimLikeTab).length
         dispatchCommand('atom-vim-like-tab:new')
 
-        expect(getTabControllers().length).toBeGreaterThan(beforeControllersNum)
+        expect(getTabControllers(atomVimLikeTab)).to.have.lengthOf.above(beforeControllersNum)
       })
 
       it('old pane should be hide', () => {
         dispatchCommand('atom-vim-like-tab:new')
 
-        const oldController = getFirstTabController()
+        const oldController = getFirstTabController(atomVimLikeTab)
 
         expect(
           oldController.getPaneViews().every(
             (view) => view.style.display === 'none'
-          )).toBe(true)
+          )).to.be.true
       })
 
       it('new tabControllers should be have another pane', () => {
-        const beforePanes = getFirstTabController().panes
+        const beforePanes = getFirstTabController(atomVimLikeTab).panes
         dispatchCommand('atom-vim-like-tab:new')
 
-        const newPane = _.first(getLastTabController().panes)
+        const newPane = _.first(getLastTabController(atomVimLikeTab).panes)
 
-        expect(beforePanes).not.toContain(newPane)
+        expect(beforePanes).to.not.contain(newPane)
       })
 
       it('new pane should be managed new tabContoller after new command', () => {
@@ -116,12 +115,12 @@ describe('AtomVimLikeTab', () => {
         atom.workspace.getCenter().getActivePane().splitRight()
         const newPane = atom.workspace.getCenter().getActivePane()
 
-        const oldControllerPanes = getFirstTabController().panes
-        const newControllerPanes = getLastTabController().panes
+        const oldControllerPanes = getFirstTabController(atomVimLikeTab).panes
+        const newControllerPanes = getLastTabController(atomVimLikeTab).panes
 
-        expect(oldControllerPanes).not.toContain(newPane)
+        expect(oldControllerPanes).to.not.contain(newPane)
 
-        expect(newControllerPanes).toContain(newPane)
+        expect(newControllerPanes).to.contain(newPane)
       })
     })
 
@@ -131,100 +130,100 @@ describe('AtomVimLikeTab', () => {
       })
 
       it('current tab should be hide', () => {
-        const beforeShowIndex = getMain().showIndex
+        const beforeShowIndex = atomVimLikeTab.showIndex
         dispatchCommand('atom-vim-like-tab:next')
 
-        const previousController = getTabControllers()[beforeShowIndex]
+        const previousController = getTabControllers(atomVimLikeTab)[beforeShowIndex]
 
         expect(
           previousController.getPaneViews().every(
             (view) => view.style.display === 'none'
-          )).toBe(true)
+          )).to.be.true
       })
 
       it('next tab should be show', () => {
         dispatchCommand('atom-vim-like-tab:next')
-        const showIndex = getMain().showIndex
-        const nextController = getTabControllers()[showIndex]
+        const showIndex = atomVimLikeTab.showIndex
+        const nextController = getTabControllers(atomVimLikeTab)[showIndex]
 
         expect(nextController.getPaneViews().every(
           (view) => view.style.display === ''
-        )).toBe(true)
+        )).to.be.true
       })
 
       it('next tab pane should be activated', () => {
         dispatchCommand('atom-vim-like-tab:next')
-        const showIndex = getMain().showIndex
-        const nextController = getTabControllers()[showIndex]
+        const showIndex = atomVimLikeTab.showIndex
+        const nextController = getTabControllers(atomVimLikeTab)[showIndex]
 
-        expect(nextController.panes[0]).toBe(atom.workspace.getCenter().getActivePane())
+        expect(nextController.panes[0]).to.be.eql(atom.workspace.getCenter().getActivePane())
       })
     })
 
     describe('close', () => {
       describe('when before create new tab', () => {
 
-        it('last TabController should not be removed', () => {
-          const initController = getFirstTabController()
+        it('last TabController should not be removed', async () => {
+          const initController = getFirstTabController(atomVimLikeTab)
           dispatchCommand('atom-vim-like-tab:close')
+          // hack for pane.close() called by atom-vim-like-tab:close completly done.
+          // because dispatchCommand() can't return promise.
+          await new Promise(resolve => setTimeout(resolve, 100))
 
-          expect(initController.panes).toHaveLength(1)
+          expect(initController.panes).to.have.lengthOf(1)
 
-          expect(getTabControllers()).toContain(initController)
+          expect(getTabControllers(atomVimLikeTab)).to.contain(initController)
         })
       })
 
       describe('when after carete new tab', () => {
         let currentController = null
-        beforeEach(() => {
+        beforeEach(async () => {
           dispatchCommand('atom-vim-like-tab:new')
-          currentController = getLastTabController()
+          currentController = getLastTabController(atomVimLikeTab)
 
           dispatchCommand('atom-vim-like-tab:close')
-
           // hack for pane.close() called by atom-vim-like-tab:close completly done.
           // because dispatchCommand() can't return promise.
-          waitsForPromise(() => new Promise(resolve => setTimeout(resolve, 100)))
+          await new Promise(resolve => setTimeout(resolve, 100))
         })
 
         it('current TabController should be removed', () => {
 
-          expect(currentController.panes).toHaveLength(0)
+          expect(currentController.panes).to.have.lengthOf(0)
 
-          expect(getTabControllers()).not.toContain(currentController)
+          expect(getTabControllers(atomVimLikeTab)).not.to.contain(currentController)
         })
 
         it('previous panes should be show', () => {
-          const showIndex = getMain().showIndex
-          const previousController = getTabControllers()[showIndex]
+          const showIndex = atomVimLikeTab.showIndex
+          const previousController = getTabControllers(atomVimLikeTab)[showIndex]
 
           expect(previousController.getPaneViews().every(
             (view) => view.style.display === ''
-          )).toBe(true)
+          )).to.be.true
         })
 
         it('previous tab pane should be activated', () => {
-          const showIndex = getMain().showIndex
-          const previousController = getTabControllers()[showIndex]
+          const showIndex = atomVimLikeTab.showIndex
+          const previousController = getTabControllers(atomVimLikeTab)[showIndex]
 
-          expect(previousController.panes[0]).toBe(atom.workspace.getCenter().getActivePane())
+          expect(previousController.panes[0]).to.be.eql(atom.workspace.getCenter().getActivePane())
         })
       })
     })
 
     describe('triggered by outside action', () => {
       describe('when all panes are closed', () => {
-        it('unnecessary tabController should be removed', () => {
+        it('unnecessary tabController should be removed', async () => {
           // create new tab and then close all pane
           dispatchCommand('atom-vim-like-tab:new')
-          const newController = getLastTabController()
+          const newController = getLastTabController(atomVimLikeTab)
           const closePromises = newController.panes.map((pane) => pane.close())
 
-          waitsForPromise(() => Promise.all(closePromises))
+          await Promise.all(closePromises)
 
-          runs(() => {
-            expect(getTabControllers()).not.toContain(newController)
-          })
+          expect(getTabControllers(atomVimLikeTab)).not.to.contain(newController)
         })
       })
     })

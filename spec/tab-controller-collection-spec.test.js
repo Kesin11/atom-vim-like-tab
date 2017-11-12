@@ -1,5 +1,6 @@
 'use babel'
 
+import { expect } from 'chai'
 import TabController from '../lib/tab_controller'
 import TabControllerCollection from '../lib/tab_controller_collection'
 
@@ -16,7 +17,7 @@ describe('tabControllerCollection', () => {
     const tabController = new TabController()
     tabControllerCollection.add(tabController)
 
-    expect(tabControllerCollection.tabControllers[0]).toBe(tabController)
+    expect(tabControllerCollection.tabControllers[0]).to.equal(tabController)
   })
 
   it('remove', () => {
@@ -27,18 +28,18 @@ describe('tabControllerCollection', () => {
 
     tabControllerCollection.remove(firstTabController)
 
-    expect(tabControllerCollection.tabControllers[0]).toBe(secondTabController)
+    expect(tabControllerCollection.tabControllers[0]).to.equal(secondTabController)
 
-    expect(tabControllerCollection.length).toBe(1)
+    expect(tabControllerCollection).to.have.lengthOf(1)
   })
 
   it('length', () => {
-    expect(tabControllerCollection.length).toBe(0)
+    expect(tabControllerCollection).to.have.lengthOf(0)
 
     const tabController = new TabController()
     tabControllerCollection.add(tabController)
 
-    expect(tabControllerCollection.length).toBe(1)
+    expect(tabControllerCollection).to.have.lengthOf(1)
   })
 
   it('destroy', () => {
@@ -49,8 +50,8 @@ describe('tabControllerCollection', () => {
 
     tabControllerCollection.destroy()
 
-    expect(tabControllerCollection.tabControllers).toHaveLength(0)
+    expect(tabControllerCollection.tabControllers).to.have.lengthOf(0)
 
-    expect(tabControllerCollection.length).toBe(0)
+    expect(tabControllerCollection).to.have.lengthOf(0)
   })
 })
