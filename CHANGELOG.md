@@ -1,3 +1,7 @@
+## 1.5.0 - Replace test runner and update dependency modules
+* Replace atom default test runner to atom-mocha-test-runner
+* Replace atom-space-pen-view to atom-select-list
+
 ## 1.4.3 - bugfix
 * Bugfix 'dontRestoreInactiveTabsPane' config does not work
 
