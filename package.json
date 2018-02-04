@@ -30,7 +30,7 @@
     "npm-watch": "^0.1.4"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.2.0",
+    "atom-select-list": "0.7.0",
     "etch": "^0.9.5",
     "underscore-plus": "^1.6.6"
   },
