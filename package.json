@@ -1,7 +1,7 @@
 {
   "name": "atom-vim-like-tab",
   "main": "./lib/main",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Add Vim like tab features in Atom",
   "keywords": [
     "Vim",
