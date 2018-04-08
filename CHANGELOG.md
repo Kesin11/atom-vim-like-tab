@@ -1,3 +1,6 @@
+## 1.5.1 - Update dependency packages
+* #11
+
 ## 1.5.0 - Replace test runner and update dependency modules
 * Replace atom default test runner to atom-mocha-test-runner
 * Replace atom-space-pen-view to atom-select-list
