@@ -24,8 +24,8 @@
     "atom-mocha-test-runner": "1.2.0",
     "chai": "4.1.2",
     "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.10.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "2.13.0",
     "eslint-plugin-jasmine": "^2.9.3",
     "npm-watch": "^0.3.0"
   },
