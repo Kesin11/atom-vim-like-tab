@@ -1,3 +1,5 @@
+## 1.5.2 - Update dependency packages and Support Atom 1.28
+
 ## 1.5.1 - Update dependency packages
 * #11
 
