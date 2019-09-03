@@ -1,3 +1,6 @@
+## 1.5.3 - Update dependency for Security fix
+* [#11](https://github.com/Kesin11/atom-vim-like-tab/pull/16) Security fix
+
 ## 1.5.2 - Update dependency packages and Support Atom 1.28
 
 ## 1.5.1 - Update dependency packages
